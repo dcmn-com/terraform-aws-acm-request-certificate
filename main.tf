@@ -1,14 +1,11 @@
 locals {
-  # Remove the var.domain_name from the subject_alternative_names as it doesn't need to be there.
-  sans                      = ["${sort(distinct(compact(var.subject_alternative_names)))}"]
-  subject_alternative_names = ["${concat( slice(local.sans, 0, index(local.sans, var.domain_name)), slice(local.sans, index(local.sans, var.domain_name) + 1 , length(local.sans) ))}"]
-  zone_name                 = "${var.zone_name == "" ? var.domain_name : var.zone_name}"
+  zone_name = "${var.zone_name == "" ? var.domain_name : var.zone_name}"
 }
 
 resource "aws_acm_certificate" "default" {
   domain_name               = "${var.domain_name}"
   validation_method         = "${var.validation_method}"
-  subject_alternative_names = ["${local.subject_alternative_names}"]
+  subject_alternative_names = ["${var.subject_alternative_names}"]
   tags                      = "${var.tags}"
 
   lifecycle {
@@ -32,7 +29,7 @@ resource "aws_acm_certificate_validation" "default" {
 }
 
 resource "aws_route53_record" "default" {
-  count   = "${var.process_domain_validation_options == "true" && var.validation_method == "DNS" ? length(local.subject_alternative_names)  + 1 : 0 }"
+  count   = "${var.process_domain_validation_options == "true" && var.validation_method == "DNS" ? length(var.subject_alternative_names)  + 1 : 0 }"
   zone_id = "${data.aws_route53_zone.default.zone_id}"
   name    = "${lookup(aws_acm_certificate.default.domain_validation_options[count.index],"resource_record_name")}"
   type    = "${lookup(aws_acm_certificate.default.domain_validation_options[count.index], "resource_record_type")}"
