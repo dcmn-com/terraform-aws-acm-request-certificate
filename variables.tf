@@ -32,3 +32,9 @@ variable "subject_alternative_names" {
   default     = []
   description = "A list of domains that should be SANs in the issued certificate"
 }
+
+variable "zone_name" {
+  type        = "string"
+  default     = ""
+  description = "The Hosted Zone name of the desired Hosted Zone"
+}
