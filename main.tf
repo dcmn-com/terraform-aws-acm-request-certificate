@@ -1,5 +1,5 @@
 locals {
-  zone_name = "${var.zone_name == "" ? var.domain_name : var.zone_name}"
+  zone_name = "${var.zone_name == "" ? var.domain_name. : var.zone_name}"
 }
 
 resource "aws_acm_certificate" "default" {
@@ -15,7 +15,7 @@ resource "aws_acm_certificate" "default" {
 
 data "aws_route53_zone" "default" {
   count        = "${var.process_domain_validation_options == "true" && var.validation_method == "DNS" ? 1 : 0}"
-  name         = "${local.zone_name}."
+  name         = "${local.zone_name}"
   private_zone = false
 }
 
