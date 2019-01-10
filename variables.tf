@@ -36,5 +36,5 @@ variable "subject_alternative_names" {
 variable "zone_name" {
   type        = "string"
   default     = ""
-  description = "The Hosted Zone name of the desired Hosted Zone"
+  description = "The name of the desired Route53 Hosted Zone"
 }
